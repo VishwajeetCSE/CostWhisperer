@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CostWhisperer | AWS Bill Translator & Leak Hunter Agent</title>
+  <meta name="description" content="An empathetic, delightful AI agent built for the AWS Builder Challenge that translates cryptic bills, identifies silent cost leaks, and provides instant CLI fixes.">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Canvas Confetti for delight celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="logo-group">
+      <div class="logo-badge">CW</div>
+      <div class="title-wrap">
+        <h1>CostWhisperer <span style="font-size:16px;">💸➡️🛡️</span></h1>
+        <p>The empathetic AWS Bill Translator & Cost Leak Agent</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="badge-tag">#agents Weekend Challenge</span>
+      <a href="https://github.com/VishwajeetCSE/CostWhisperer" target="_blank" class="github-link">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        GitHub Repo
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- Left Controls & Input Section -->
+    <section class="input-panel">
+
+      <!-- Delight Detail 1: Anxiety Meter -->
+      <div class="panel-card anxiety-card">
+        <div class="anxiety-header">
+          <label for="anxietySlider"><strong>AWS Bill Anxiety Meter</strong></label>
+          <span id="anxietyStatus" class="anxiety-status">😰 Panic Mode (85%)</span>
+        </div>
+        <div class="slider-container">
+          <input type="range" id="anxietySlider" min="0" max="100" value="85">
+          <div class="slider-labels">
+            <span>😌 Zen ("Just curious")</span>
+            <span>😐 Mild Shock</span>
+            <span>😱 Boss Saw The Bill</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Scenarios -->
+      <div class="panel-card">
+        <div class="card-title">
+          <span>⚡ Try a Real-World Leak Scenario</span>
+        </div>
+        <div class="scenario-grid">
+          <button class="scenario-btn" onclick="loadScenario('startup_surprise')">
+            <strong>🚀 The Startup Surprise ($1,420/mo)</strong>
+            <span>NAT Gateways + S3 data processing in private ECS</span>
+          </button>
+          <button class="scenario-btn" onclick="loadScenario('dormant_playground')">
+            <strong>🧪 The Dormant Dev Playground ($485/mo)</strong>
+            <span>Unattached EBS volumes + idle Elastic IPs</span>
+          </button>
+          <button class="scenario-btn" onclick="loadScenario('chatty_microservice')">
+            <strong>⚡ The Cross-AZ Chatty Microservice ($1,850/mo)</strong>
+            <span>Inter-AZ replication traffic + debug logging</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bill Input Form -->
+      <div class="panel-card">
+        <div class="card-title">
+          <span>📋 Paste Your AWS Bill or Line Items</span>
+        </div>
+        <textarea id="billInput" class="bill-input" placeholder="Paste AWS Cost Explorer items, invoice text, or SKU descriptions here...&#10;&#10;e.g.&#10;AmazonEC2 - NatGateway-Bytes: $842&#10;EBS:VolumeUsage.gp2: $148&#10;ElasticIP:Idle: $36"></textarea>
+
+        <div class="action-row">
+          <button id="analyzeBtn" class="btn-primary" onclick="runCostWhisperer()">
+            <span>✨ Diagnose & Translate</span>
+          </button>
+          <button class="btn-secondary" onclick="clearInput()">Clear</button>
+        </div>
+      </div>
+
+      <!-- Instant Jargon Dictionary Tooltips -->
+      <div class="panel-card">
+        <div class="card-title">
+          <span>📖 Instant Jargon Decoder</span>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+          Click any cryptic AWS line item to see what AWS is actually charging you for:
+        </p>
+        <div class="jargon-pills">
+          <div class="jargon-pill" onclick="explainJargon('natgateway')">NatGateway-Bytes</div>
+          <div class="jargon-pill" onclick="explainJargon('orphaned_ebs')">VolumeUsage.gp2 (unattached)</div>
+          <div class="jargon-pill" onclick="explainJargon('unused_eip')">ElasticIP:Idle / IPv4</div>
+          <div class="jargon-pill" onclick="explainJargon('cross_az_data')">DataTransfer-Regional</div>
+          <div class="jargon-pill" onclick="explainJargon('cloudwatch_retention')">PutLogEvents / StoredBytes</div>
+          <div class="jargon-pill" onclick="explainJargon('idle_rds')">RDS Provisioned Multi-AZ</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Output & Agent Interaction Section -->
+    <section class="results-panel">
+
+      <!-- Delight Detail 2: Savings Scorecard Banner -->
+      <div class="savings-banner" id="savingsBanner">
+        <div class="savings-info">
+          <h3>Potential Monthly Savings Identified</h3>
+          <div class="savings-amount" id="savingsAmount">$0.00 / mo</div>
+          <p class="savings-sub" id="savingsSub">Run diagnosis to identify silent AWS budget drains.</p>
+        </div>
+        <div class="savings-actions">
+          <button class="btn-confetti" onclick="celebrateSavings()">🎉 Celebrate Fixes</button>
+        </div>
+      </div>
+
+      <!-- Agent Response Feed -->
+      <div class="agent-chat">
+        <div class="chat-header">
+          <div class="agent-avatar">🤖</div>
+          <div class="agent-title">
+            <h2>CostWhisperer Agent</h2>
+            <p id="agentStatusText">Ready to demystify your AWS bill with Bedrock intelligence</p>
+          </div>
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>Active & Empathetic</span>
+          </div>
+        </div>
+
+        <div id="findingsContainer">
+          <!-- Initial welcome greeting card -->
+          <div class="finding-card">
+            <div class="finding-header">
+              <span class="finding-title">👋 Welcome to CostWhisperer!</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">
+              Don't let AWS invoices give you nightmares. Paste your AWS bill breakdown or click one of the pre-loaded real-world leak scenarios on the left.
+            </p>
+            <div class="plain-explanation" style="margin-top: 12px;">
+              <strong>💡 Why CostWhisperer is different:</strong>
+              We don't just dump raw analytics. We translate cryptic SKUs into human terms, estimate your exact recoverable dollars, and generate <em>copy-paste AWS CLI remediation commands</em> you can run in your terminal right now.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>
+      Built for the <strong>AWS Builder Center Weekend Challenge</strong> (<a href="https://builder.aws.com/" target="_blank">#agents</a>) &bull; 
+      Powered by <strong>AWS Bedrock & Anthropic Claude 3.5 Sonnet / Amazon Nova</strong> &bull; 
+      Crafted with ❤️ by <a href="https://github.com/VishwajeetCSE" target="_blank">Vishwajeet</a>
+    </p>
+  </footer>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
