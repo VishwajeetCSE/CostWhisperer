@@ -25,7 +25,14 @@
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: #0b0f19;
+  background-image: 
+    linear-gradient(180deg, rgba(11, 15, 25, 0.88) 0%, rgba(13, 17, 27, 0.75) 40%, rgba(11, 15, 25, 0.92) 100%),
+    url('bg.jpg');
+  background-attachment: fixed;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--text-main);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.6;
@@ -34,10 +41,12 @@ body {
   flex-direction: column;
 }
 
-/* Header */
+/* Header with backdrop blur */
 header {
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
+  background: rgba(22, 27, 34, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(48, 54, 61, 0.8);
   padding: 16px 24px;
   display: flex;
   justify-content: space-between;
@@ -138,11 +147,13 @@ header {
 }
 
 .panel-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  background: rgba(22, 27, 34, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(48, 54, 61, 0.7);
   border-radius: var(--radius);
   padding: 20px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .card-title {
@@ -365,14 +376,17 @@ input[type="range"] {
 
 /* Chat & Findings Feed */
 .agent-chat {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  background: rgba(22, 27, 34, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(48, 54, 61, 0.7);
   border-radius: var(--radius);
   padding: 24px;
   min-height: 480px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .chat-header {
